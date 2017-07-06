@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="us-ascii"?>
+
+<application xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" id="application">
+
+  <!-- =============================================================== -->
+  <!-- =====                 JOB TEMPLATES                        ==== -->
+  <!-- =============================================================== -->
+
+  <jobTemplates>
+
+    <!-- Job template "ProcessBiopar" -->
+    <jobTemplate id="ProcessBiopar">
+
+        <streamingExecutable>/application/ProcessBiopar/run.sh</streamingExecutable>
+
+        <defaultParameters>           
+            <parameter id="startdate" type="opensearch" target="time:start">2017-01-08T00:00:00.000Z</parameter>
+            <parameter id="enddate"   type="opensearch" target="time:end">2017-01-08T23:59:59.999Z</parameter>
+            <parameter id="qbbox"     type="opensearch" target="geo:box">2.99,58.45,0.53,58.26</parameter>
+            <!-- <parameter id="qgeom"     type="opensearch" target="geo:geometry">2.99,58.45,0.53,58.26</parameter> -->
+        </defaultParameters>
+
+        <defaultJobconf>
+            <property id="mapred.task.timeout">6000000</property>
+        </defaultJobconf>
+
+    </jobTemplate>
+
+    <!-- Job template "TransferResults" -->
+    <jobTemplate id="TransferResults">
+
+        <streamingExecutable>/application/TransferResults/run.sh</streamingExecutable>
+
+        <defaultJobconf>
+            <!-- <property id="ciop.job.max.tasks">1</property> -->
+        </defaultJobconf>
+
+    </jobTemplate>
+
+  </jobTemplates>
+
+  <!-- =============================================================== -->
+  <!-- =====                     WORKFLOW                         ==== -->
+  <!-- =============================================================== -->
+
+  <workflow id="workflow" title="Sentinel2 Biopar Workflow" abstract="Workflow for the processing of bio-physical parameters (NDVI, FAPAR, LAI, fCOVER) from Sentinel2">
+
+    <workflowVersion>1.0</workflowVersion>
+
+    <!-- Node 1/2: Call Morpho workflow for the processing of Bio-physical parameters -->
+    <node id="ProcessBioparNode">
+      <job id="ProcessBiopar"/>
+      <sources>
+        <source refid="cas:series">https://catalog.terradue.com/sentinel2/description</source>
+      </sources>
+    </node>
+
+    <!-- Node 2/2: Transfer results -->
+    <node id="TransferResultsNode">
+      <job id="TransferResults"/>
+      <sources>
+        <source refid="wf:node">ProcessBioparNode</source>
+      </sources>
+    </node>
+
+  </workflow>
+
+</application>

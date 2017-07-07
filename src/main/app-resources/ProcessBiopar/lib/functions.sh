@@ -90,7 +90,7 @@ function main()
         -v ${outputDir}:/home/worker/workDir/outDir             \
         -v ${tmpDir}:/home/worker/workDir/tmpDir                \
         -v /home/worker/s2-biopar:/home/worker/s2-biopar        \
-        nextgeoss/s2-biopar                                     \
+        vito-docker-private.artifactory.vgt.vito.be/nextgeoss-sentinel2-biopar:latest  \
         python /home/worker/s2-biopar/morpho_workflow.py -c /home/worker/s2-biopar/config/sentinel2_biopar_nextgeoss.ini --tmp_dir ${tmpDir} --delete_tmp /home/worker/workDir/inDir/$(basename $s2Product)
 
   else
@@ -125,9 +125,9 @@ function main()
   ciop-log "INFO" "Cleaning up temporary data"
 
   rm -rf ${s2Product} 
-  docker run -v /home/worker:/home/worker nextgeoss/s2-biopar /bin/bash -c "rm -rf /home/worker/workDir/outDir/${outputNameNg}.tgz"
-  docker run -v /home/worker:/home/worker nextgeoss/s2-biopar /bin/bash -c "rm -rf /home/worker/workDir/outDir/${outputDate}/${outputName}"
-  docker run -v /home/worker:/home/worker nextgeoss/s2-biopar /bin/bash -c "rmdir  /home/worker/workDir/outDir/${outputDate} &> /dev/null"
+  docker run -v /home/worker:/home/worker vito-docker-private.artifactory.vgt.vito.be/nextgeoss-sentinel2-biopar:latest /bin/bash -c "rm -rf /home/worker/workDir/outDir/${outputNameNg}.tgz"
+  docker run -v /home/worker:/home/worker vito-docker-private.artifactory.vgt.vito.be/nextgeoss-sentinel2-biopar:latest /bin/bash -c "rm -rf /home/worker/workDir/outDir/${outputDate}/${outputName}"
+  docker run -v /home/worker:/home/worker vito-docker-private.artifactory.vgt.vito.be/nextgeoss-sentinel2-biopar:latest /bin/bash -c "rmdir  /home/worker/workDir/outDir/${outputDate} &> /dev/null"
 
   return ${SUCCESS}
 }

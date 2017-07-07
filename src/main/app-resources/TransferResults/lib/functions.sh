@@ -1,12 +1,5 @@
 #!/bin/bash
 
-# FTP server settings
-FTP_TRANSFER_MODE=1             # transfer mode (0|1 = sftp|ftp)
-FTP_USER='s2-biopar'
-FTP_PASSWORD='Bio_20s!'
-FTP_HOST='cvbftp.vgt.vito.be'
-FTP_DIR='s2-biopar-nextgeoss'
-
 # define the exit codes
 SUCCESS=0
 ERR_TRANSFER=60
@@ -36,51 +29,22 @@ function cleanExit ()
 function main() {
   
   local input=$1
-  local inputDir=${TMPDIR}/s2-biopar-input
+  local outputDir=${TMPDIR}/s2-biopar-output
 
-  mkdir -p ${inputDir}
+  mkdir -p ${outputDir}
 
-  s2BioparProduct=$( echo $input | ciop-copy -U -o ${inputDir} - )
+  s2BioparProduct=$(echo $input | ciop-copy -U -o ${outputDir} -)
+  s2BioparProductBasename=$(basename ${s2BioparProduct})
 
   # Check if the copy was successfull
   [ $? -eq 0 ] && [ -n "${s2BioparProduct}" ] || return ${ERR_INPUT_COPY}
   
-  ciop-log "INFO" "Transferring Sentinel2 Biopar products: ${s2BioparProduct}"
-
-  s2BioparLocalDir=`dirname ${s2BioparProduct}`
-  s2BioparBaseName=`basename ${s2BioparProduct}`
-
-  if [ $FTP_TRANSFER_MODE -eq 0 ]; then
-
-      # Use SFTP as transfer protocol
-      
-      sftp ${FTP_USER}@${FTP_HOST} -b << EOT
-
-          cd ${FTP_DIR}
-          lcd ${s2BioparLocalDir}
-          put ${s2BioparBaseName}
-
-          bye
-          
-EOT
-
-  elif [ $FTP_TRANSFER_MODE -eq 1 ]; then
-
-      # Use FTP as transfer protocol
-
-      ftp -n -v $FTP_HOST << EOT
-
-        user ${FTP_USER} ${FTP_PASSWORD}
-        binary
-        cd ${FTP_DIR}
-        lcd ${s2BioparLocalDir}
-        put ${s2BioparBaseName}
-        
-        bye
-
-EOT
-
-  fi
+  # Transfer Sentinel2 Biopar product
+  docker run \
+       -v ${outputDir}:/home/worker/workDir/outDir       \
+       -v /home/worker/s2-biopar:/home/worker/s2-biopar  \
+       nextgeoss/s2-biopar                               \
+       /home/worker/s2-biopar/transferProduct.sh /home/worker/workDir/outDir/${s2BioparProductBasename}
 
   [ $? -eq 0 ] || return $ERR_TRANSFER
 

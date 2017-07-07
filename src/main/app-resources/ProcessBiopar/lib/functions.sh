@@ -45,7 +45,11 @@ function main()
   local inputDir=${TMPDIR}/s2-biopar-input
   local outputDir=${TMPDIR}/s2-biopar-output
   local tmpDir=${TMPDIR}/s2-biopar-tmp
-  
+
+  local inputDir="/home/worker/workDir/inDir" 
+  local outputDir="/home/worker/workDir/outDir" 
+  local tmpDir="/home/worker/workDir/tmpDir" 
+ 
   mkdir -p ${inputDir}
   mkdir -p ${outputDir}
   mkdir -p ${tmpDir}
@@ -58,15 +62,16 @@ function main()
       enclosure="$( opensearch-client ${input} enclosure )"
   fi
 
+  rm -rf ${inputDir}/$(basename ${enclosure}) 
   s2Product=$( ciop-copy -U -o ${inputDir} "${enclosure}" )     # -U = disable automatic decompression of zip - files
-
-  # Check if the Sentinel2 product was retrieved, if not exit with the error code $ERR_NOINPUT
-  [ $? -eq 0 ] && [ -e "${s2Product}" ] || return ${ERR_NOINPUT}
 
   # Check if the Sentinel2 product is a symbolic link. We need to pass the input directory to the "docker run" command.
   if [ -L $s2Product ]; then
       inputDir=`dirname $(readlink $s2Product)`
   fi
+
+  # Check if the Sentinel2 product was retrieved, if not exit with the error code $ERR_NOINPUT
+  [ $? -eq 0 ] && [ -e "${s2Product}" ] || return ${ERR_NOINPUT}
 
   s2ProductReference=$(basename "$s2Product" ".zip")
   
@@ -76,6 +81,8 @@ function main()
 
   # Call the Sentinel2 Biopar processing workflow for the given Sentinel2 product
   if [ $USE_STUB -eq 0 ]; then
+
+      ciop-log "INFO" "Generating Sentinel2 Biopar product ${outputNameNg} (input = ${s2Product})"
 
       docker run                                                \
         -e "LD_LIBRARY_PATH=/home/worker/s2-biopar"             \
@@ -99,24 +106,28 @@ function main()
   [ $? -eq 0 ] || return $ERR_BIOPAR
 
   # Create tarball of generated results
+  ciop-log "INFO" "Creating tarball ${outputNameNg}.tgz"
+
   cd ${outputDir}/${outputDate}
   
-  tar --transform='s/CGS/NEXTGEOSS/g' --show-transformed-names -czvf ${outputNameNg}.tgz ${outputName} &> /dev/null
+  tar --transform='s/CGS/NEXTGEOSS/g' --show-transformed-names -czvf ${outputDir}/${outputNameNg}.tgz ${outputName}
 
-  [ $? -eq 0 ] && [ -e "${outputNameNg}.tgz" ] || return ${ERR_BIOPAR}
+  [ $? -eq 0 ] && [ -e "${outputDir}/${outputNameNg}.tgz" ] || return ${ERR_BIOPAR}
 
   cd -
 
   # Stage out the generated results to the next step
-  ciop-publish ${outputDir}/${outputDate}/${outputNameNg}.tgz
+  ciop-publish ${outputDir}/${outputNameNg}.tgz
   
   [ $? -eq 0 ] || return ${ERR_PUBLISH}
 
   # Cleanup temporary results
+  ciop-log "INFO" "Cleaning up temporary data"
+
   rm -rf ${s2Product} 
-  rm -rf ${outputDir}/${outputDate}/${outputName} 
-  rm -rf ${outputDir}/${outputDate}/${outputNameNg}.tgz
-  rmdir  ${outputDir}/${outputDate} &> /dev/null
+  docker run -v /home/worker:/home/worker nextgeoss/s2-biopar /bin/bash -c "rm -rf /home/worker/workDir/outDir/${outputNameNg}.tgz"
+  docker run -v /home/worker:/home/worker nextgeoss/s2-biopar /bin/bash -c "rm -rf /home/worker/workDir/outDir/${outputDate}/${outputName}"
+  docker run -v /home/worker:/home/worker nextgeoss/s2-biopar /bin/bash -c "rmdir  /home/worker/workDir/outDir/${outputDate} &> /dev/null"
 
   return ${SUCCESS}
 }

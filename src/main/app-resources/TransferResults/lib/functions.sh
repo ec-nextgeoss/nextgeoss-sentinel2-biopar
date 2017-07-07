@@ -43,7 +43,7 @@ function main() {
   docker run \
        -v ${outputDir}:/home/worker/workDir/outDir       \
        -v /home/worker/s2-biopar:/home/worker/s2-biopar  \
-       nextgeoss/s2-biopar                               \
+       vito-docker-private.artifactory.vgt.vito.be/nextgeoss-sentinel2-biopar:latest  \
        /home/worker/s2-biopar/transferProduct.sh /home/worker/workDir/outDir/${s2BioparProductBasename}
 
   [ $? -eq 0 ] || return $ERR_TRANSFER

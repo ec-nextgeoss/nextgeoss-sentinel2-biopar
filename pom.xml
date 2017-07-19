@@ -15,8 +15,8 @@
   <properties>
     <summary>Processing workflow for the generation of Bio-physical parameters from Sentinel2.</summary>
     <description>Processing workflow for the generation of Bio-physical parameters from Sentinel2.</description>
-    <community>NextGEOSS</community>
-    <yumRepo>NextGEOSS</yumRepo>
+    <community>ec-nextgeoss</community>
+    <yumRepo>ec-nextgeoss</yumRepo>
   </properties>
   <scm>
     <connection>scm:git:ssh://git@github.com/NextGEOSS/sentinel2-biopar</connection>

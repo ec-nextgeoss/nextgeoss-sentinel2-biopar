@@ -1,6 +1,6 @@
 ## Sentinel2 Biopar Processing Chain <app-name> application  
 
-Put here an introductory text describing the application.
+app-name = nextgeoss-sentinel2-biopar
 
 ## Quick link
  

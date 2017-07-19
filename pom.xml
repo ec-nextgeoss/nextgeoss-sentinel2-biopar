@@ -11,7 +11,7 @@
     <version>2.0.0</version>
   </parent>
   <description>Processing workflow for the generation of Bio-physical parameters from Sentinel2.</description>
-  <version>1.0</version>
+  <version>1.0-SNAPSHOT</version>
   <properties>
     <summary>Processing workflow for the generation of Bio-physical parameters from Sentinel2.</summary>
     <description>Processing workflow for the generation of Bio-physical parameters from Sentinel2.</description>
@@ -20,8 +20,8 @@
   </properties>
   <scm>
     <connection>scm:git:ssh://git@github.com/NextGEOSS/sentinel2-biopar</connection>
-    <developerConnection>scm:git:ssh://git@github.com/NextGEOSS/sentinel2-biopar</developerConnection>
-    <url>https://github.com/NextGEOSS/sentinel2-biopar</url>
+    <developerConnection>scm:git:ssh://git@github.com/ec-nextgeoss/nextgeoss-sentinel2-biopar</developerConnection>
+    <url>https://github.com/ec-nextgeoss/nextgeoss-sentinel2-biopar</url>
     <tag>HEAD</tag>
   </scm>
   <profiles>

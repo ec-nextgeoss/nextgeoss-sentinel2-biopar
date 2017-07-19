@@ -76,9 +76,9 @@ To learn more and find information go to
 
 ### <a name="authors"></a>Authors (alphabetically)
 
-* Author
+* Tom Van Roey (tom.vanroey@vito.be)
 
-### <a name="questions">Tom Van Roey</a>Questions, bugs, and suggestions
+### <a name="questions"></a>Questions, bugs, and suggestions
 
 Please file any bugs or questions as [issues](<app-url>) or send in a pull request if you corrected any.
 

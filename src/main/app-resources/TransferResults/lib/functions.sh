@@ -42,7 +42,6 @@ function main() {
   # Transfer Sentinel2 Biopar product
   docker run \
        -v ${outputDir}:/home/worker/workDir/outDir       \
-       -v /home/worker/s2-biopar:/home/worker/s2-biopar  \
        vito-docker-private.artifactory.vgt.vito.be/nextgeoss-sentinel2-biopar:latest  \
        /home/worker/s2-biopar/transferProduct.sh /home/worker/workDir/outDir/${s2BioparProductBasename}
 

@@ -1,6 +1,6 @@
-## Developer Cloud Sandbox <app-name> application  
+## Sentinel2 Biopar Processing Chain <app-name> application  
 
-Put here an introductory text describing the application.
+app-name = nextgeoss-sentinel2-biopar
 
 ## Quick link
  
@@ -11,7 +11,6 @@ Put here an introductory text describing the application.
 * [Authors](#authors)
 * [Questions, bugs, and suggestions](#questions)
 * [License](#license)
-* [Funding](#funding)
 
 ### <a name="getting-started"></a>Getting Started 
 
@@ -19,23 +18,21 @@ To run this application you will need a Developer Cloud Sandbox that can be requ
 
 A Developer Cloud Sandbox provides Earth Sciences data access services, and helper tools for a user to implement, test and validate a scalable data processing application. It offers a dedicated virtual machine and a Cloud Computing environment.
 The virtual machine runs in two different lifecycle modes: Sandbox mode and Cluster mode. 
-Used in Sandbox mode (single virtual machine), it supports cluster simulation and user assistance functions in building the distributed application.
-Used in Cluster mode (a set of master and slave nodes), it supports the deployment and execution of the application with the power of distributed computing for data processing over large datasets (leveraging the Hadoop Streaming MapReduce technology). 
+
+Used in Sandbox mode (single virtual machine), it supports cluster simulation and user assistance functions in building the distributed application. Used in Cluster mode (a set of master and slave nodes), it supports the deployment and execution of the application with the power of distributed computing for data processing over large datasets (leveraging the Hadoop Streaming MapReduce technology). 
 
 ### <a name="installation"></a>Installation
 
 #### Pre-requisites
 
-Put here the requirements of the application in terms of software packages. For example:
+Put here the requirements of the application in terms of software packages: 
 
-* snap
-* idl
+* docker (https://www.docker.com/)
 
 To install these packages, run the simple steps below on the Developer Cloud Sandbox shell:
 
 ```bash
-sudo yum install -y snap
-sudo yum install -y idl
+sudo yum install -y docker
 ```
 
 ##### Using the releases
@@ -79,7 +76,7 @@ To learn more and find information go to
 
 ### <a name="authors"></a>Authors (alphabetically)
 
-* Author
+* Tom Van Roey (tom.vanroey@vito.be)
 
 ### <a name="questions"></a>Questions, bugs, and suggestions
 
@@ -88,7 +85,3 @@ Please file any bugs or questions as [issues](<app-url>) or send in a pull reque
 ### <a name="license"></a>License
 
 Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
-
-### <a name="funding"></a>Funding
-
-Put here any information about the funding.

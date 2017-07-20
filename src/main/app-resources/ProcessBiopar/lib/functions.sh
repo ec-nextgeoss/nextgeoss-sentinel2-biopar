@@ -46,9 +46,9 @@ function main()
   local outputDir=${TMPDIR}/s2-biopar-output
   local tmpDir=${TMPDIR}/s2-biopar-tmp
 
-  # local inputDir="/home/worker/workDir/inDir" 
-  # local outputDir="/home/worker/workDir/outDir" 
-  # local tmpDir="/home/worker/workDir/tmpDir" 
+  local inputDir="/home/worker/workDir/inDir" 
+  local outputDir="/home/worker/workDir/outDir" 
+  local tmpDir="/home/worker/workDir/tmpDir" 
  
   mkdir -p ${inputDir}
   mkdir -p ${outputDir}

@@ -59,7 +59,7 @@ function main()
   if [[ ${input:0:4} == "file" ]]; then
       enclosure=${input}
   else
-      enclosure="$( opensearch-client ${input} enclosure )"
+      enclosure="$( opensearch-client -p do=terradue ${input} enclosure )"
   fi
 
   rm -rf ${inputDir}/$(basename ${enclosure}) 

@@ -145,7 +145,7 @@ function main()
   ciop-log "INFO" "Filtering tiles of Sentinel2 product ${s2ProductReference}"
 
   s2ProductInput="/home/worker/workDir/inDir/$(basename ${s2Product})"
-  s2ProductFiltered="/home/worker/workDir/tmpDir/$(basename ${s2Product}).zip"
+  s2ProductFiltered="/home/worker/workDir/tmpDir/$(basename ${s2Product})"
 
   docker run                                                                            \
         -v ${inputDir}:/home/worker/workDir/inDir                                       \

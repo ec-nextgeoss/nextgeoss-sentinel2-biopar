@@ -127,8 +127,8 @@ function main()
 
      # Example: S2A_MSIL1C_20161211T103432_N0204_R108_T32ULA_20161211T103426.zip
 
-     s2ProductDate=${s2ProductReference:45:8}
-     s2ProductDateTime=${s2ProductReference:45:15}
+     s2ProductDate=${s2ProductReference:11:8}
+     s2ProductDateTime=${s2ProductReference:11:15}
      s2TileIdentifiers+=(${s2ProductReference:39:5})
 
   fi

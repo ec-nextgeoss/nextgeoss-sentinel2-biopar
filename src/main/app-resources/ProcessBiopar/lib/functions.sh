@@ -176,7 +176,16 @@ function main()
   # Publish results to next processing step
   for s2TileId in "${s2TileIdentifiers[@]}"; do
 
-      outputName=$(printf "%s_%sZ_%s_CGS_V001_000" "${s2Id}" "${s2ProductDateTime}" "${s2TileId}")
+      # Get the unique reference of the Sentinel2 Biopar product
+      
+      # outputName=$(printf "%s_%sZ_%s_CGS_V001_000" "${s2Id}" "${s2ProductDateTime}" "${s2TileId}")
+      
+      references=`ls "${outputDir}/${s2ProductDate}" | grep "${s2Id}_.*_${s2TileId}_CGS_V001_000"`
+    
+      for ref in $references; do
+          outputName=${ref}
+      done
+
       outputNameNg=${outputName/CGS/NEXTGEOSS}
 
       # Check whether the tile has been generated

@@ -4,6 +4,7 @@
 SUCCESS=0
 ERR_TRANSFER=60
 ERR_INPUT_COPY=61
+ERR_NOINPUT=62
 
 ###############################################################################
 # Trap function to exit gracefully
@@ -16,6 +17,7 @@ function cleanExit ()
     ${SUCCESS})         msg="Transferring Sentinel2 Biopar products successfully concluded";;
     ${ERR_TRANSFER})    msg="Failed to transfer the Sentinel2 Biopar products";;
     ${ERR_INPUT_COPY})  msg="Failed to copy input Sentinel2 Biopar products";;
+    ${ERR_NOINPUT})     msg="No Sentinel2 Biopar products found to be transferred";;
     *) msg="Unknown error";;
   esac
 

@@ -11,7 +11,7 @@
     <version>2.0.0</version>
   </parent>
   <description>Processing workflow for the generation of Bio-physical parameters from Sentinel2.</description>
-  <version>1.3</version>
+  <version>1.4</version>
   <properties>
     <summary>Processing workflow for the generation of Bio-physical parameters from Sentinel2.</summary>
     <description>Processing workflow for the generation of Bio-physical parameters from Sentinel2.</description>

@@ -8,14 +8,8 @@ trap cleanExit EXIT
 
 # Input references come from STDIN (standard input) and they are retrieved
 # line-by-line.
-nbInputs=0
-
 while read input
 do
-  let nbInputs=nbInputs+1
+  ciop-log "INFO" "The input is: ${input}"
   main ${input} || exit $?
 done
-
-if [ $nbInputs -eq 0 ]; then
-    exit $ERR_NOINPUT
-fi

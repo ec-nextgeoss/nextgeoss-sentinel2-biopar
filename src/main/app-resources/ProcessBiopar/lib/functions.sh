@@ -26,8 +26,38 @@ function cleanExit ()
     *) msg="Unknown error";;
   esac
 
+  ciop-log "INFO" "Cleaning up tmp folder"
+  rm -rf ${TMPDIR}/s2-biopar-tmp
+ 
   [ "${retval}" != "0" ] && ciop-log "ERROR" "Error ${retval} - ${msg}, processing aborted" || ciop-log "INFO" "${msg}"
   exit ${retval}
+}
+
+###############################################################################
+# Functions to retrieve the opensearch mapping
+###############################################################################
+function getosparams() {
+        URL=$1
+        PARAMS=${URL##*\?}
+        PARAMS_ARR=(${PARAMS//[&]/ })
+        declare -A PARAM_MAPPING
+        PARAM_MAPPING['identifier']="{http://a9.com/-/opensearch/extensions/geo/1.0/}uid"
+        PARAM_MAPPING['timerange_start']="{http://a9.com/-/opensearch/extensions/time/1.0/}start"
+        PARAM_MAPPING['timerange_end']="{http://a9.com/-/opensearch/extensions/time/1.0/}end"
+        PARAM_MAPPING['bbox']="{http://a9.com/-/opensearch/extensions/geo/1.0/}box"
+        PARAM_MAPPING['count']="{http://a9.com/-/spec/opensearch/1.1/}count"
+
+        COMMAND_PARAMS=""
+        for param in "${PARAMS_ARR[@]}"
+        do
+                p=(${param//[=]/ })
+
+                if [[ ! -z ${PARAM_MAPPING[${p[0]}]} ]]; then
+                        COMMAND_PARAMS+=" -p ${PARAM_MAPPING[${p[0]}]}=${p[1]}"
+                fi
+        done
+        echo $COMMAND_PARAMS
+
 }
 
 ###############################################################################
@@ -46,9 +76,9 @@ function main()
   local outputDir=${TMPDIR}/s2-biopar-output
   local tmpDir=${TMPDIR}/s2-biopar-tmp
 
-  local inputDir="/home/worker/workDir/inDir" 
-  local outputDir="/home/worker/workDir/outDir" 
-  local tmpDir="/home/worker/workDir/tmpDir"
+  #local inputDir="/home/worker/workDir/inDir" 
+  #local outputDir="/home/worker/workDir/outDir" 
+  #local tmpDir="/home/worker/workDir/tmpDir"
  
   mkdir -p ${inputDir}
   mkdir -p ${outputDir}
@@ -64,7 +94,10 @@ function main()
   if [[ ${input:0:4} == "file" ]]; then
       enclosure=${input}
   else
-      enclosure="$( opensearch-client -p do=terradue ${input} enclosure )"
+      # Escape (,) characters to prevent error in opensearch client
+      params=$(getosparams $input)
+      ciop-log "INFO" "Querying opensearch client with params $params"
+      enclosure="$(opensearch-client $params https://catalogue-lite.nextgeoss.eu/opensearch/description.xml?osdd=SENTINEL2_L1C enclosure)"
   fi
 
   rm -rf ${inputDir}/$(basename ${enclosure}) 
@@ -146,47 +179,58 @@ function main()
 
   s2ProductInput="/home/worker/workDir/inDir/$(basename ${s2Product})"
   s2ProductFiltered="/home/worker/workDir/tmpDir/$(basename ${s2Product})"
+  s2ProductFilteredPath="${tmpDir}/$(basename ${s2Product})"
+  ciop-log "INFO" "Triggering docker with ${s2ProductInput} ${s2ProductFiltered} ${SENTINEL2_TILES}"
 
-  docker run                                                                            \
+  docker run --rm                                                                       \
         -v ${inputDir}:/home/worker/workDir/inDir                                       \
         -v ${outputDir}:/home/worker/workDir/outDir                                     \
         -v ${tmpDir}:/home/worker/workDir/tmpDir                                        \
         vito-docker-private.artifactory.vgt.vito.be/nextgeoss-sentinel2-biopar:latest   \
         python /home/worker/s2-biopar/sentinel2_tile_filter.py ${s2ProductInput} ${s2ProductFiltered} ${SENTINEL2_TILES}
 
+  echo "PRODUCT CHECK ${s2ProductFilteredPath}"
+  ls -l ${s2ProductFilteredPath}
+ 
   # Check the exit code
-  [ $? -eq 0 ] || return $ERR_FILTER
-  [ -f "${s2ProductFiltered}" ] || return $ERR_FILTER
+  # [ $? -eq 0 ] || return $ERR_FILTER
+  [ -f "${s2ProductFilteredPath}" ] || return $ERR_FILTER
 
   # Call the Sentinel2 Biopar processing workflow for the given Sentinel2 product
 
   ciop-log "INFO" "Creating bio-physical parameters of Sentinel2 product ${s2ProductReference}"
 
-  docker run                                                                            \
+  # tmpDir=${TMPDIR}/s2-biopar-tmp/${s2ProductReference}/tmp
+  ciop-log "INFO" "Setting tmp dir to ${tmpDir}"
+  
+  outputDir=${TMPDIR}/s2-biopar-output/${s2ProductReference}/out
+  ciop-log "INFO" "Setting output dir to ${outputDir}"
+
+  echo "${s2ProductFiltered}"
+  echo "${inputDir}"
+  ls -l ${inputDir}  
+  docker run --rm                                                                       \
         -e "LD_LIBRARY_PATH=/home/worker/s2-biopar"                                     \
         -v ${inputDir}:/home/worker/workDir/inDir                                       \
         -v ${outputDir}:/home/worker/workDir/outDir                                     \
         -v ${tmpDir}:/home/worker/workDir/tmpDir                                        \
         vito-docker-private.artifactory.vgt.vito.be/nextgeoss-sentinel2-biopar:latest   \
-        python /home/worker/s2-biopar/morpho_workflow.py -c /home/worker/s2-biopar/config/sentinel2_biopar_nextgeoss.ini --tmp_dir ${tmpDir} --delete_tmp ${s2ProductFiltered}
+        python /home/worker/s2-biopar/morpho_workflow.py -c /home/worker/s2-biopar/config/sentinel2_biopar_nextgeoss.ini --tmp_dir /home/worker/workDir/tmpDir  --delete_tmp ${s2ProductFiltered}
 
   # Check the exit code
   [ $? -eq 0 ] || return $ERR_BIOPAR
 
+  echo "CHECKING OUTPUT DIR ${outputDir}"
+  ls -l ${outputDir}
+  ls -l ${outputDir}/*
+
   # Publish results to next processing step
   for s2TileId in "${s2TileIdentifiers[@]}"; do
 
-      # Get the unique reference of the Sentinel2 Biopar product
-      
-      # outputName=$(printf "%s_%sZ_%s_CGS_V001_000" "${s2Id}" "${s2ProductDateTime}" "${s2TileId}")
-      
-      references=`ls "${outputDir}/${s2ProductDate}" | grep "${s2Id}_.*_${s2TileId}_CGS_V001_000"`
-    
-      for ref in $references; do
-          outputName=${ref}
-      done
-
+      search=$(printf "%s_%s.*_%s_CGS_V001_000" "${s2Id}" "${s2ProductDate}" "${s2TileId}")
+      outputName=$(ls -t ${outputDir}/${s2ProductDate} | grep ${search} | head -n 1)
       outputNameNg=${outputName/CGS/NEXTGEOSS}
+
 
       # Check whether the tile has been generated
       if [ ! -d "${outputDir}/${s2ProductDate}/${outputName}" ]; then
@@ -195,11 +239,16 @@ function main()
 
       ciop-log "INFO" "Publishing Sentinel2 Biopar product ${outputNameNg}"
 
+
+      ciop-log "INFO" "Updating permissions for ${outputName}"
+
+      docker run -v ${outputDir}:/home/worker/workDir/outDir vito-docker-private.artifactory.vgt.vito.be/nextgeoss-sentinel2-biopar:latest /bin/bash -c "chmod -R 777 /home/worker/workDir/outDir/"
+  
       # Create tarball of generated results
       ciop-log "INFO" "Creating tarball ${outputNameNg}.tgz"
 
       cd ${outputDir}/${s2ProductDate}
-      
+   
       tar --transform='s/CGS/NEXTGEOSS/g' --show-transformed-names -czvf ${outputDir}/${outputNameNg}.tgz ${outputName}
 
       [ $? -eq 0 ] && [ -e "${outputDir}/${outputNameNg}.tgz" ] || return ${ERR_BIOPAR}
@@ -228,3 +277,5 @@ function main()
 
   return ${SUCCESS}
 }
+
+

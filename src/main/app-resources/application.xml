@@ -16,14 +16,15 @@
         <defaultParameters>  
 
             <!-- OpenSearch query parameters -->
-            <parameter id="startdate" abstract="Start Date"   title="Start Date"   scope="runtime" type="opensearch" target="time:start">2017-01-08T00:00:00.000Z</parameter>
-            <parameter id="enddate"   abstract="End Date"     title="End Date"     scope="runtime" type="opensearch" target="time:end">2017-01-08T23:59:59.999Z</parameter>
-            <!--parameter id="qbbox"     abstract="Bounding Box" title="Bounding Box" scope="runtime" type="opensearch" target="geo:box">2.99,58.45,0.53,58.26</parameter> -->
-            <parameter id="uid" abstract="Tile identifier"   title="Tile identifier"  scope="runtime" type="opensearch" target="geo:uid"></parameter>
-            <parameter id="qgeom"     abstract="Polygon"      title="Polygon"      scope="runtime" type="opensearch" target="geo:geometry">POLYGON((-7.000 25.2367, -4.6497 25.2367, 4.7023 18.9908, 4.7023 18.9908, 4.2383 15.4800, -0.4377 14.5837, -5.3993 10.1920, -8.4690 9.9812, -9.5399 11.7339, -12.2527 11.8736, -12.5739 15.9610, -5.9704 16.1668, -7.000 25.2367))</parameter>
+            <parameter id="startdate" abstract="Start Date"   title="Start Date"   scope="runtime" type="opensearch" target="time:start">2020-05-22</parameter>
+            <parameter id="enddate"   abstract="End Date"     title="End Date"     scope="runtime" type="opensearch" target="time:end">2020-05-23</parameter>
+           <parameter id="qbbox"     abstract="Bounding Box" title="Bounding Box" scope="runtime" type="opensearch" target="geo:box">4.156951904296875,51.088860342359965,4.34783935546875,51.177621156752494</parameter>
+	    <!--<parameter id="id"   abstract="ID"     title="ID"     scope="runtime" type="opensearch" target="geo:uid">S2B_MSIL1C_20200522T103629_N0209_R008_T31UFS_20200522T133046</parameter>-->
+ 
+<!-- <parameter id="qgeom"     abstract="Polygon"      title="Polygon"      scope="runtime" type="opensearch" target="geo:geometry">POLYGON((-7.000 25.2367, -4.6497 25.2367, 4.7023 18.9908, 4.7023 18.9908, 4.2383 15.4800, -0.4377 14.5837, -5.3993 10.1920, -8.4690 9.9812, -9.5399 11.7339, -12.2527 11.8736, -12.5739 15.9610, -5.9704 16.1668, -7.000 25.2367))</parameter> -->
 
             <!-- Job specific parameters -->
-            <parameter id="s2tiles" abstract="Comma-separated list of Sentinel2 tiles to be processed" title="Sentinel2 Tiles" >28PGA,28PGB,28PGC,28PGU,28PGV,28PHA,28PHB,28PHC,28PHU,28PHV,29PKP,29PKQ,29PKR,29PKS,29PKT,29PLN,29PLP,29PLQ,29PLR,29PLS,29PLT,29PMM,29PMN,29PMP,29PMQ,29PMR,29PMS,29PMT,29PNM,29PNN,29PNP,29PNQ,29PNR,29PNS,29PNT,29PPM,29PPN,29PPP,29PPQ,29PPR,29PPS,29PPT,29PQM,29PQN,29PQP,29PQQ,29PQR,29PQS,29PQT,29PRM,29PRN,29PRP,29PRQ,29PRR,29PRS,29PRT,29QPG,29QQA,29QQB,29QQC,29QQD,29QQE,29QQF,29QQG,29QQU,29QQV,29QRA,29QRB,29QRC,29QRD,29QRE,29QRF,29QRG,29QRU,29QRV,29RPH,29RPJ,29RQH,29RQJ,29RRH,29RRJ,30PTA,30PTB,30PTC,30PTS,30PTT,30PTU,30PTV,30PUA,30PUB,30PUC,30PUS,30PUT,30PUU,30PUV,30PVA,30PVB,30PVC,30PVT,30PVU,30PVV,30PWA,30PWB,30PWC,30PWU,30PWV,30PXA,30PXB,30PXC,30PXV,30PYA,30PYB,30PYC,30PZB,30PZC,30QTD,30QTE,30QTF,30QTG,30QTH,30QTJ,30QTK,30QTL,30QTM,30QUD,30QUE,30QUF,30QUG,30QUH,30QUJ,30QUK,30QUL,30QUM,30QVD,30QVE,30QVF,30QVG,30QVH,30QVJ,30QVK,30QVL,30QVM,30QWD,30QWE,30QWF,30QWG,30QWH,30QWJ,30QWK,30QWL,30QWM,30QXD,30QXE,30QXF,30QXG,30QXH,30QXJ,30QXK,30QXL,30QXM,30QYD,30QYE,30QYF,30QYG,30QYH,30QYJ,30QYK,30QYL,30QZD,30QZE,30QZF,30QZG,30QZH,30QZJ,30QZK,30RTN,30RTP,30RUN,30RUP,30RVN,31PBS,31PBT,31PCS,31PCT,31PDS,31PDT,31PES,31PET,31PFT,31QBA,31QBB,31QBC,31QBD,31QBE,31QBU,31QBV,31QCA,31QCB,31QCC,31QCD,31QCU,31QCV,31QDA,31QDB,31QDC,31QDD,31QDU,31QDV,31QEA,31QEB,31QEC,31QEU,31QEV,31QFA,31QFB,31QFU,31QFV,31UDQ,31UDR,31UDS,31UDT,31UEQ,31UER,31UES,31UET,31UFQ,31UFR,31UFS,31UFT,31UGQ,31UGR,31UGS,31UGT</parameter>
+            <parameter id="s2tiles" abstract="Comma-separated list of Sentinel2 tiles to be processed" title="Sentinel2 Tiles" scope="runtime">28PGA,28PGB,28PGC,28PGU,28PGV,28PHA,28PHB,28PHC,28PHU,28PHV,29PKP,29PKQ,29PKR,29PKS,29PKT,29PLN,29PLP,29PLQ,29PLR,29PLS,29PLT,29PMM,29PMN,29PMP,29PMQ,29PMR,29PMS,29PMT,29PNM,29PNN,29PNP,29PNQ,29PNR,29PNS,29PNT,29PPM,29PPN,29PPP,29PPQ,29PPR,29PPS,29PPT,29PQM,29PQN,29PQP,29PQQ,29PQR,29PQS,29PQT,29PRM,29PRN,29PRP,29PRQ,29PRR,29PRS,29PRT,29QPG,29QQA,29QQB,29QQC,29QQD,29QQE,29QQF,29QQG,29QQU,29QQV,29QRA,29QRB,29QRC,29QRD,29QRE,29QRF,29QRG,29QRU,29QRV,29RPH,29RPJ,29RQH,29RQJ,29RRH,29RRJ,30PTA,30PTB,30PTC,30PTS,30PTT,30PTU,30PTV,30PUA,30PUB,30PUC,30PUS,30PUT,30PUU,30PUV,30PVA,30PVB,30PVC,30PVT,30PVU,30PVV,30PWA,30PWB,30PWC,30PWU,30PWV,30PXA,30PXB,30PXC,30PXV,30PYA,30PYB,30PYC,30PZB,30PZC,30QTD,30QTE,30QTF,30QTG,30QTH,30QTJ,30QTK,30QTL,30QTM,30QUD,30QUE,30QUF,30QUG,30QUH,30QUJ,30QUK,30QUL,30QUM,30QVD,30QVE,30QVF,30QVG,30QVH,30QVJ,30QVK,30QVL,30QVM,30QWD,30QWE,30QWF,30QWG,30QWH,30QWJ,30QWK,30QWL,30QWM,30QXD,30QXE,30QXF,30QXG,30QXH,30QXJ,30QXK,30QXL,30QXM,30QYD,30QYE,30QYF,30QYG,30QYH,30QYJ,30QYK,30QYL,30QZD,30QZE,30QZF,30QZG,30QZH,30QZJ,30QZK,30RTN,30RTP,30RUN,30RUP,30RVN,31PBS,31PBT,31PCS,31PCT,31PDS,31PDT,31PES,31PET,31PFT,31QBA,31QBB,31QBC,31QBD,31QBE,31QBU,31QBV,31QCA,31QCB,31QCC,31QCD,31QCU,31QCV,31QDA,31QDB,31QDC,31QDD,31QDU,31QDV,31QEA,31QEB,31QEC,31QEU,31QEV,31QFA,31QFB,31QFU,31QFV,31UDQ,31UDR,31UDS,31UDT,31UEQ,31UER,31UES,31UET,31UFQ,31UFR,31UFS,31UFT,31UGQ,31UGR,31UGS,31UGT</parameter>
 
         </defaultParameters>
 
@@ -59,7 +60,9 @@
       <job id="ProcessBiopar"/>
       <sources>
         <!-- <source refid="file:urls">/application/inputs/list</source> -->
-        <source refid="cas:series">https://catalog.terradue.com/sentinel2/description</source>
+        <!-- <source refid="cas:series">https://catalog.terradue.com/sentinel2/description</source> -->
+	<source refid="cas:series">https://catalogue-lite.nextgeoss.eu/opensearch/description.xml?osdd=SENTINEL2_L1C</source>
+
       </sources>
     </node>
 

@@ -97,7 +97,7 @@ function main()
       # Escape (,) characters to prevent error in opensearch client
       params=$(getosparams $input)
       ciop-log "INFO" "Querying opensearch client with params $params"
-      enclosure="$(opensearch-client $params https://catalogue-lite.nextgeoss.eu/opensearch/description.xml?osdd=SENTINEL2_L1C enclosure)"
+      enclosure="$(opensearch-client $params https://catalogue.nextgeoss.eu/opensearch/description.xml?osdd=SENTINEL2_L1C enclosure)"
   fi
 
   rm -rf ${inputDir}/$(basename ${enclosure}) 

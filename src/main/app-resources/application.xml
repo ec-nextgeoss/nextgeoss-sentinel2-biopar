@@ -61,7 +61,7 @@
       <sources>
         <!-- <source refid="file:urls">/application/inputs/list</source> -->
         <!-- <source refid="cas:series">https://catalog.terradue.com/sentinel2/description</source> -->
-	<source refid="cas:series">https://catalogue-lite.nextgeoss.eu/opensearch/description.xml?osdd=SENTINEL2_L1C</source>
+	<source refid="cas:series">https://catalogue.nextgeoss.eu/opensearch/description.xml?osdd=SENTINEL2_L1C</source>
 
       </sources>
     </node>

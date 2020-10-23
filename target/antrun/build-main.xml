@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <project name="maven-antrun-" default="main"  >
 <target name="main">
-  <chmod dir="/application" perm="755" includes="**/run**"/>
-  <chmod dir="/application" perm="755" includes="**/*.sh"/>
-  <chmod dir="/application" perm="755" includes="**/*.py"/>
-  <chmod dir="/application" perm="755" includes="**/*.R"/>
-  <chmod dir="/application" perm="755" includes="**/*.exe"/>
-  <chmod dir="/application" perm="755" includes="**/*.sav"/>
+  <chmod dir="/application" includes="**/run**" perm="755"/>
+  <chmod dir="/application" includes="**/*.sh" perm="755"/>
+  <chmod dir="/application" includes="**/*.py" perm="755"/>
+  <chmod dir="/application" includes="**/*.R" perm="755"/>
+  <chmod dir="/application" includes="**/*.exe" perm="755"/>
+  <chmod dir="/application" includes="**/*.sav" perm="755"/>
   <chmod file="/application/application.xml" perm="664"/>
 </target>
 </project>
